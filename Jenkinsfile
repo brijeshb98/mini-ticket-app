@@ -25,7 +25,11 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=mini-ticket-app'
+                    sh '''
+                        mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                        -Dsonar.projectKey=mini-ticket-app \
+                        -Dsonar.projectName=mini-ticket-app
+                    '''
                 }
             }
         }
