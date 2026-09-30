@@ -7,15 +7,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Project Information -->
     <groupId>com.example</groupId>
     <artifactId>mini-ticket-app</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.${revision}</version>
 
     <packaging>jar</packaging>
 
-    <!-- Project Properties -->
     <properties>
+        <revision>0</revision>
+
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -23,17 +23,14 @@
         <spring-boot.version>3.3.5</spring-boot.version>
     </properties>
 
-    <!-- Dependencies -->
     <dependencies>
 
-        <!-- Spring Boot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
 
-        <!-- Spring Boot Test + JUnit 5 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -42,19 +39,21 @@
         </dependency>
 
     </dependencies>
-<distributionManagement>
-    <repository>
-        <id>nexus</id>
-        <name>Nexus Releases</name>
-        <url>http://13.201.104.204:8082/repository/maven-releases/</url>
-    </repository>
-</distributionManagement>  
 
-<!-- Build Configuration -->
+    <distributionManagement>
+
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Releases</name>
+            <url>http://13.201.104.204:8082/repository/maven-releases/</url>
+        </repository>
+
+    </distributionManagement>
+
     <build>
+
         <plugins>
 
-            <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -66,28 +65,28 @@
                 </configuration>
             </plugin>
 
-            <!-- Maven Surefire Plugin - Runs Unit Tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
             </plugin>
 
-            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-		<version>${spring-boot.version}</version>
-		<executions>
-			<execution>
-				<goals>
-					<goal>repackage</goal>
-				</goals>
-			</execution>
-		</executions>
+		<version>${spring-boot.version}"</version>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
+
     </build>
 
 </project>

@@ -2,6 +2,10 @@ pipeline {
 
     agent any
 
+    environment {
+        APP_VERSION = "1.0.${BUILD_NUMBER}"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -12,21 +16,24 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                sh 'mvn clean compile -Drevision=${BUILD_NUMBER}'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                sh 'mvn test'
+                sh 'mvn test -Drevision=${BUILD_NUMBER}'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
+
                 withSonarQubeEnv('SonarQube') {
+
                     sh '''
                         mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                        -Drevision=${BUILD_NUMBER} \
                         -Dsonar.projectKey=mini-ticket-app \
                         -Dsonar.projectName=mini-ticket-app
                     '''
@@ -36,20 +43,26 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
+
                 timeout(time: 5, unit: 'MINUTES') {
+
                     waitForQualityGate abortPipeline: true
+
                 }
             }
         }
 
         stage('Package') {
             steps {
-                sh 'mvn package -DskipTests'
+
+                sh 'mvn package -DskipTests -Drevision=${BUILD_NUMBER}'
+
             }
         }
 
         stage('Publish to Nexus') {
             steps {
+
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'nexus-credentials',
@@ -71,7 +84,10 @@ pipeline {
 </settings>
 EOF
 
-                        mvn deploy -DskipTests -s nexus-settings.xml
+                        mvn deploy \
+                        -DskipTests \
+                        -Drevision=${BUILD_NUMBER} \
+                        -s nexus-settings.xml
 
                         rm -f nexus-settings.xml
                     '''
