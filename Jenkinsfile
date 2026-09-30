@@ -2,10 +2,6 @@ pipeline {
 
     agent any
 
-    environment {
-        APP_VERSION = "1.0.${BUILD_NUMBER}"
-    }
-
     stages {
 
         stage('Checkout') {
@@ -16,13 +12,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile -Drevision=${APP_Version}'
+                sh 'mvn clean compile -Drevision=${BUILD_NUMBER}'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                sh 'mvn test -Drevision=${App_Version}'
+                sh 'mvn test -Drevision=${BUILD_NUMBER}'
             }
         }
 
@@ -33,7 +29,7 @@ pipeline {
 
                     sh '''
                         mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-                        -Drevision=${App_Version} \
+                        -Drevision=${BUILD_NUMBER} \
                         -Dsonar.projectKey=mini-ticket-app \
                         -Dsonar.projectName=mini-ticket-app
                     '''
@@ -55,7 +51,7 @@ pipeline {
         stage('Package') {
             steps {
 
-                sh 'mvn package -DskipTests -Drevision=${App_Version}'
+                sh 'mvn package -DskipTests -Drevision=${BUILD_NUMBER}'
 
             }
         }
@@ -86,7 +82,7 @@ EOF
 
                         mvn deploy \
                         -DskipTests \
-                        -Drevision=${App_Version} \
+                        -Drevision=${BUILD_NUMBER} \
                         -s nexus-settings.xml
 
                         rm -f nexus-settings.xml
