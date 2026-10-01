@@ -32,7 +32,8 @@ pipeline {
                         -Drevision=1.0.${BUILD_NUMBER} \
                         -Dsonar.projectKey=mini-ticket-app \
                         -Dsonar.projectName=mini-ticket-app
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml                    '''
+                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml                    
+                    '''
                 }
             }
         }
