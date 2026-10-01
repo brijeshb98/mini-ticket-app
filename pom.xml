@@ -7,33 +7,45 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Project Information -->
     <groupId>com.example</groupId>
     <artifactId>mini-ticket-app</artifactId>
 
+    <!-- Jenkins overrides this using -Drevision=1.0.${BUILD_NUMBER} -->
     <version>${revision}</version>
 
     <packaging>jar</packaging>
 
+
+    <!-- Project Properties -->
     <properties>
 
+        <!-- Default version when building outside Jenkins -->
         <revision>1.0.0</revision>
 
+        <!-- Java -->
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
 
+        <!-- Spring Boot -->
         <spring-boot.version>3.3.5</spring-boot.version>
 
     </properties>
 
+
+    <!-- Dependencies -->
     <dependencies>
 
+        <!-- Spring Boot REST API -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
 
+
+        <!-- Unit Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -43,20 +55,26 @@
 
     </dependencies>
 
+
+    <!-- Nexus Repository -->
     <distributionManagement>
 
         <repository>
             <id>nexus</id>
             <name>Nexus Releases</name>
-            <url>http://3.7.45.122:8082/repository/maven-releases/</url>
+            <url>http://YOUR_CURRENT_IP:8082/repository/maven-releases/</url>
         </repository>
 
     </distributionManagement>
 
+
+    <!-- Build Configuration -->
     <build>
 
         <plugins>
 
+
+            <!-- Java Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -69,26 +87,65 @@
 
             </plugin>
 
+
+            <!-- Unit Test Execution -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
             </plugin>
 
+
+            <!-- JaCoCo Code Coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.16</version>
+
+                <executions>
+
+                    <!-- Attach JaCoCo agent before tests -->
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+
+
+                    <!-- Generate coverage report -->
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+
+            <!-- Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
 
                 <executions>
+
                     <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
                     </execution>
+
                 </executions>
 
             </plugin>
+
 
         </plugins>
 
