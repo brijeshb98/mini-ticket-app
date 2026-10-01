@@ -2,6 +2,8 @@ package com.example.ticket;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -70,6 +72,36 @@ public class TicketServiceTest {
 
         assertNotNull(result);
         assertEquals("CLOSED", result.getStatus());
+    }
+
+    @Test
+    void shouldReturnAllTickets() {
+
+        Ticket ticket1 = new Ticket(
+                104,
+                "Network Issue",
+                "Network is down",
+                "HIGH",
+                "OPEN"
+        );
+
+        Ticket ticket2 = new Ticket(
+                105,
+                "Email Issue",
+                "Unable to send email",
+                "MEDIUM",
+                "OPEN"
+        );
+
+        ticketService.createTicket(ticket1);
+        ticketService.createTicket(ticket2);
+
+        List<Ticket> result = ticketService.getAllTickets();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(104, result.get(0).getId());
+        assertEquals(105, result.get(1).getId());
     }
 
     @Test
