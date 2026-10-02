@@ -70,7 +70,7 @@ EOF
 
         success {
             echo "SUCCESS: mini-ticket-app-${BUILD_NUMBER}.jar has been deployed to Nexus Repository."
-            echo "You can access the Nexus Repository here: http://YOUR_CURRENT_IP:8082/#browse/browse:maven-releases"
+            echo "You can access the Nexus Repository here: http://16.4.74.240:8082/#browse/browse:maven-releases"
         }
 
         failure {
