@@ -4,35 +4,14 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean compile -Drevision=1.0.${BUILD_NUMBER}'
-            }
-        }
-
-        stage('Unit Tests') {
-            steps {
-                sh 'mvn verify  -Drevision=1.0.${BUILD_NUMBER}'
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
-
                 withSonarQubeEnv('SonarQube') {
-
                     sh '''
                         mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
                         -Drevision=1.0.${BUILD_NUMBER} \
                         -Dsonar.projectKey=mini-ticket-app \
-                        -Dsonar.projectName=mini-ticket-app \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml                    
+                        -Dsonar.projectName=mini-ticket-app
                     '''
                 }
             }
@@ -40,20 +19,15 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-
                 timeout(time: 5, unit: 'MINUTES') {
-
                     waitForQualityGate abortPipeline: true
-
                 }
             }
         }
 
-        stage('Package') {
+        stage('Build, Test & Package') {
             steps {
-
-                sh 'mvn package -DskipTests -Drevision=1.0.${BUILD_NUMBER}'
-
+                sh 'mvn clean package -Drevision=1.0.${BUILD_NUMBER}'
             }
         }
 
