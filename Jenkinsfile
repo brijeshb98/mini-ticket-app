@@ -5,18 +5,17 @@ pipeline {
     stages {
 
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-                        -Drevision=1.0.${BUILD_NUMBER} \
-                        -Dsonar.projectKey=mini-ticket-app \
-                        -Dsonar.projectName=mini-ticket-app
-                    '''
-                }
-            }
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            sh '''
+                mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                -Drevision=1.0.${BUILD_NUMBER} \
+                -Dsonar.projectKey=mini-ticket-app \
+                -Dsonar.projectName=mini-ticket-app
+            '''
         }
-
+    }
+}
         stage('Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
@@ -64,6 +63,18 @@ EOF
                     '''
                 }
             }
+        }
+    }
+
+    post {
+
+        success {
+            echo "SUCCESS: mini-ticket-app-${BUILD_NUMBER}.jar has been deployed to Nexus Repository."
+            echo "You can access the Nexus Repository here: http://YOUR_CURRENT_IP:8082/#browse/browse:maven-releases"
+        }
+
+        failure {
+            echo "FAILED: Pipeline failed. "
         }
     }
 }
